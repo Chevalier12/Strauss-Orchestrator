@@ -7,7 +7,6 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -18,11 +17,11 @@ namespace StraussOrchestratorCSharp
     /// </summary>
     public partial class MainWindow : Window
     {
-        public SQLTable Table = new SQLTable();
+        public SQLTable Table = new();
         public List<Image> ImageMenuList;
 
         //===============Automation Buttons MainMenu======================
-        public List<string> Automation_ButtonsList = new List<string>()
+        public List<string> Automation_ButtonsList = new()
         {
             "  Packages  ",
             "  Jobs  ",
@@ -31,12 +30,12 @@ namespace StraussOrchestratorCSharp
 
         public StackPanel Automation_StackPanel;
 
-        public List<StackPanel> MainMenuStackPanels = new List<StackPanel>();
+        public List<StackPanel> MainMenuStackPanels = new();
 
 
         //===============All possible submenu items=========================
         public List<Button> SubMenuButtonsList = new();
-        public List<String> SubMenuButtonNamesList = new List<string>()
+        public List<String> SubMenuButtonNamesList = new()
         {
             "  Add  ",
             "  Edit  ",
@@ -70,8 +69,8 @@ namespace StraussOrchestratorCSharp
             newGrid.ColumnDefinitions.Add(textBoxColumnDefinition);
 
             foreach (ColumnDefinition col in Table.ColumnDefinitions)
-            {   //Grid will contains textblocks and textboxes so the user can insert new datarows in the datatable, afterwards
-                //the SQL table will be updated with this new datatable.
+            {   //Grid will contains text blocks and textboxes so the user can insert new data rows in the data table, afterwards
+                //the SQL table will be updated with this new data table.
                 TextBlock tb = new TextBlock();
                 TextBox inputTextBox = new();
                 var columnName = col.Name.Replace("_Header", "");
@@ -101,12 +100,12 @@ namespace StraussOrchestratorCSharp
 
                     //Several keywords are taken in consideration to avoid certain column values to be edited
                     //as they are not meant to be edited
-                    if (columnName.Contains("Date") == true)
+                    if (columnName.Contains("Date"))
                     {
                         inputTextBox.IsEnabled = false;
                         inputTextBox.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"); 
                     }
-                    else if (columnName.Contains("Started") == true || columnName.Contains("Finished") == true)
+                    else if (columnName.Contains("Started") || columnName.Contains("Finished"))
                     {
                         inputTextBox.IsEnabled = false;
                         inputTextBox.Text = "N/A";
@@ -140,7 +139,7 @@ namespace StraussOrchestratorCSharp
             //Create all sub-menu buttons
             foreach (var element in SubMenuButtonNamesList)
             {
-                Button NewButton = new Button()
+                Button NewButton = new Button
                 {
                     Background = new SolidColorBrush(new Color { A = 100, R = 231, G = 233, B = 245 }),
                     FontFamily = new FontFamily("Century Gothic"),
@@ -149,10 +148,9 @@ namespace StraussOrchestratorCSharp
                     Height = 30,
                     Width = Double.NaN,
                     VerticalAlignment = VerticalAlignment.Center,
-                    HorizontalAlignment = HorizontalAlignment.Center
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Name = element.Trim()
                 };
-
-                NewButton.Name = element.Trim();
 
                 try
                 {   //This code adds handlers based on the name of the methods
@@ -223,18 +221,18 @@ namespace StraussOrchestratorCSharp
             //Get all tables that match name with the sender_name
             foreach (DataRow item in mySQLTables.Rows)
             {
-                if (item.ItemArray[0].ToString().Contains(Sender_Name) == true)
+                if (item.ItemArray[0].ToString().Contains(Sender_Name))
                 {
                     tableList.Add(item.ItemArray[0].ToString());
                 }
             }
 
             //If any match, then create conditional tables
-            if (tableList.Contains(Sender_Name + "_list") == true && tableList.Contains(Sender_Name + "_attachment") == true)
+            if (tableList.Contains(Sender_Name + "_list") && tableList.Contains(Sender_Name + "_attachment"))
             {
                 CreateTable("Server=localhost;User ID=root;Database=straussdatabase", tableList[tableList.IndexOf(Sender_Name + "_list")], tableList[tableList.IndexOf(Sender_Name + "_attachment")], 0, 10);
             }
-            else if (tableList.Contains(Sender_Name + "_list") == true && tableList.Contains(Sender_Name + "_attachment") == false)
+            else if (tableList.Contains(Sender_Name + "_list") && tableList.Contains(Sender_Name + "_attachment") == false)
             {
                 CreateTable("Server=localhost;User ID=root;Database=straussdatabase", tableList[tableList.IndexOf(Sender_Name + "_list")], null, 0, 10);
             }
@@ -319,8 +317,8 @@ namespace StraussOrchestratorCSharp
                 {
 
                     //Add Main Menu for Category
-                    ((Image)image).Source = new BitmapImage(new Uri(name.Split("_")[0] + "_Images/highlight_" + name.Split("_")[0] + "_selected.png", UriKind.Relative));
-                    ((Image)image).Tag = "IsSelected";
+                    image.Source = new BitmapImage(new Uri(name.Split("_")[0] + "_Images/highlight_" + name.Split("_")[0] + "_selected.png", UriKind.Relative));
+                    image.Tag = "IsSelected";
 
                     //Dynamically assign grid based on button name by using naming conventions.
                     for (int i = 0; i < VisualTreeHelper.GetChildrenCount(MainGrid); i++)
@@ -330,11 +328,11 @@ namespace StraussOrchestratorCSharp
                         if (childVisual.GetType() == typeof(Grid))
                         {
                             Grid myGrid = (Grid)childVisual;
-                            if (myGrid.Name.Contains(name.Split("_")[0] + "_Grid") == true)
+                            if (myGrid.Name.Contains(name.Split("_")[0] + "_Grid"))
                             {
                                 foreach (StackPanel stackPanel in MainMenuStackPanels)
                                 {
-                                    if (stackPanel.Name.Contains(name.Split("_")[0]) == true)
+                                    if (stackPanel.Name.Contains(name.Split("_")[0]))
                                     {
                                         myGrid.Visibility = Visibility.Visible;
                                         if (myGrid.Children.Contains(stackPanel) == false)
@@ -345,7 +343,7 @@ namespace StraussOrchestratorCSharp
                                     }
                                 }
                             }
-                            else if (myGrid.Name.Contains("_Grid") == true)
+                            else if (myGrid.Name.Contains("_Grid"))
                             {
                                 myGrid.Visibility = Visibility.Hidden;
                             }
@@ -355,8 +353,8 @@ namespace StraussOrchestratorCSharp
                 }
                 else if (image.Name != name)
                 {
-                    ((Image)image).Source = new BitmapImage(new Uri(image.Name.Split("_")[0] + "_Images/no_highlight_" + image.Name.Split("_")[0] + ".png", UriKind.Relative));
-                    ((Image)image).Tag = "IsNotSelected";
+                    image.Source = new BitmapImage(new Uri(image.Name.Split("_")[0] + "_Images/no_highlight_" + image.Name.Split("_")[0] + ".png", UriKind.Relative));
+                    image.Tag = "IsNotSelected";
                 }
             }
 
@@ -371,9 +369,11 @@ namespace StraussOrchestratorCSharp
         public void CreateTable(String myConnectionString, String TableName, [Optional] String AttachmentTableName, int StartIndex, int EndIndex)
         {
             MainGrid.Children.Remove(Table);
-            Table = new SQLTable();
+            Table = new SQLTable
+            {
+                SqlConnectionString = myConnectionString
+            };
 
-            Table.SqlConnectionString = myConnectionString;
             if (AttachmentTableName == null)
             {
                 Table.CreateGrid(Table.SQLTable_Load(TableName, StartIndex, EndIndex), StartIndex, EndIndex,

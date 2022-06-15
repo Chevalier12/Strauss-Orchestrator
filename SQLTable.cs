@@ -1,51 +1,49 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using MySqlConnector;
-using System;
-using System.Data;
+﻿using System.Data;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using MySqlConnector;
 
 namespace StraussOrchestratorCSharp;
 
 public class SQLTable : Grid
 {
-    public string SqlConnectionString;
     public SQLBrowseControls InteractiveBrowseControls;
+    public string SqlConnectionString;
 
     public void CreateGrid(DataTable dataTable, int startIndex, int endIndex, DataTable fileAttachmentsDataTable = null)
     {
-
-        this.HorizontalAlignment = HorizontalAlignment.Center;
-        this.VerticalAlignment = VerticalAlignment.Top;
-        this.Margin = new Thickness(0, 200, 0, 0);
+        HorizontalAlignment = HorizontalAlignment.Center;
+        VerticalAlignment = VerticalAlignment.Top;
+        Margin = new Thickness(0, 200, 0, 0);
 
         // Create Row Definition for Header
-        RowDefinition headerRowDefinition = new RowDefinition()
+        var headerRowDefinition = new RowDefinition
         {
             Height = new GridLength(35),
             Name = "Row_Header"
         };
-        this.RowDefinitions.Add(headerRowDefinition);
+        RowDefinitions.Add(headerRowDefinition);
         //===================================
 
         //Create columns from SQL Datatable
         foreach (DataColumn column in dataTable.Columns)
         {
-            ColumnDefinition headerColumnDefinition = new ColumnDefinition()
+            var headerColumnDefinition = new ColumnDefinition
             {
                 Name = column.ColumnName.Replace(" ", "_") + "_Header"
             };
 
-            TextBlock columnTextBlock = new TextBlock()
+            var columnTextBlock = new TextBlock
             {
                 Text = column.ColumnName,
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center,
                 FontSize = 14,
                 Height = 23,
-                Width = Double.NaN,
+                Width = double.NaN,
                 FontWeight = FontWeights.Bold,
                 FontFamily = new FontFamily("Century Gothic")
             };
@@ -55,17 +53,16 @@ public class SQLTable : Grid
 
             //==========================
 
-            this.ColumnDefinitions.Add(headerColumnDefinition);
-            this.Children.Add(columnTextBlock);
-            Grid.SetRow(columnTextBlock, 0);
-            Grid.SetColumn(columnTextBlock, this.ColumnDefinitions.IndexOf(headerColumnDefinition));
+            ColumnDefinitions.Add(headerColumnDefinition);
+            Children.Add(columnTextBlock);
+            SetRow(columnTextBlock, 0);
+            SetColumn(columnTextBlock, ColumnDefinitions.IndexOf(headerColumnDefinition));
         }
         //================================
 
         //Create GUI Table from SQL DataTable -> Row fragment
-        int columnIndex = 0;
+        var columnIndex = 0;
         foreach (DataRow row in dataTable.Rows)
-        {
             if (dataTable.Rows.IndexOf(row) >= startIndex && dataTable.Rows.IndexOf(row) <= endIndex)
             {
                 RowDefinition contentRowDefinition = new()
@@ -73,7 +70,7 @@ public class SQLTable : Grid
                     Height = new GridLength(30),
                     Tag = row
                 };
-                this.RowDefinitions.Add(contentRowDefinition);
+                RowDefinitions.Add(contentRowDefinition);
 
                 foreach (var element in row.ItemArray)
                 {
@@ -85,7 +82,7 @@ public class SQLTable : Grid
                             Content = row[0],
                             FontSize = 14,
                             Height = 23,
-                            Width = Double.NaN,
+                            Width = double.NaN,
                             VerticalAlignment = VerticalAlignment.Center,
                             HorizontalAlignment = HorizontalAlignment.Center
                         };
@@ -93,9 +90,9 @@ public class SQLTable : Grid
 
                         idCheckBox.Click += RowDefinition_Clicked;
 
-                        Grid.SetRow(idCheckBox, this.RowDefinitions.IndexOf((contentRowDefinition)));
-                        Grid.SetColumn(idCheckBox, columnIndex);
-                        this.Children.Add(idCheckBox);
+                        SetRow(idCheckBox, RowDefinitions.IndexOf(contentRowDefinition));
+                        SetColumn(idCheckBox, columnIndex);
+                        Children.Add(idCheckBox);
                     }
                     else
                     {
@@ -104,73 +101,71 @@ public class SQLTable : Grid
                             Text = element.ToString(),
                             FontSize = 14,
                             Height = 23,
-                            Width = Double.NaN,
+                            Width = double.NaN,
                             HorizontalAlignment = HorizontalAlignment.Center,
                             VerticalAlignment = VerticalAlignment.Center,
                             FontFamily = new FontFamily("Century Gothic")
                         };
-                        Grid.SetRow(contentTextBlock, this.RowDefinitions.IndexOf((contentRowDefinition)));
-                        Grid.SetColumn(contentTextBlock, columnIndex);
-                        this.Children.Add(contentTextBlock);
+                        SetRow(contentTextBlock, RowDefinitions.IndexOf(contentRowDefinition));
+                        SetColumn(contentTextBlock, columnIndex);
+                        Children.Add(contentTextBlock);
                     }
+
                     columnIndex++;
                 }
 
-                columnIndex = 0; //Test
+                columnIndex = 0;
             }
-        }
         //=======================================
 
         //If attachments DataTable is provided, then create it without storing it, just add event...
         if (fileAttachmentsDataTable != null)
         {
             ColumnDefinition attachmentsColumnDefinition = new() { Width = new GridLength(100) };
-            this.ColumnDefinitions.Add(attachmentsColumnDefinition);
+            ColumnDefinitions.Add(attachmentsColumnDefinition);
 
 
-            int attachRowIndex = 1; //row 0 is header, row 1+ is content
-            int attachColIndex = this.ColumnDefinitions.IndexOf((attachmentsColumnDefinition));
+            var attachRowIndex = 1; //row 0 is header, row 1+ is content
+            var attachColIndex = ColumnDefinitions.IndexOf(attachmentsColumnDefinition);
 
-            foreach (DataRow row in fileAttachmentsDataTable.Rows)  //test
+            foreach (DataRow row in fileAttachmentsDataTable.Rows) //test
             {
                 Button downloadButton = new() { Content = "Download", Height = 23 };
                 downloadButton.Tag = attachRowIndex;
                 downloadButton.Click += Download_Button_Click;
 
-                Grid.SetRow(downloadButton, attachRowIndex);
-                Grid.SetColumn(downloadButton, attachColIndex);
-                this.Children.Add(downloadButton);
+                SetRow(downloadButton, attachRowIndex);
+                SetColumn(downloadButton, attachColIndex);
+                Children.Add(downloadButton);
 
                 attachRowIndex += 1;
             }
-
-
         }
         //============================================
-
     }
 
     private void RowDefinition_Clicked(object sender, RoutedEventArgs e)
     {
-        CheckBox rowCheckBox = (CheckBox)sender;
+        var rowCheckBox = (CheckBox)sender;
 
-        int row_index = Int32.Parse(rowCheckBox.Content.ToString());
+        var row_index = int.Parse(rowCheckBox.Content.ToString());
     }
+
     private void Download_Button_Click(object sender, RoutedEventArgs e)
     {
-        int index = (int)((Button)sender).Tag;
+        var index = (int)((Button)sender).Tag;
 
-        DataTable attachmentsDataTable = SQLTable_Load("package_attachment", index, index);
+        var attachmentsDataTable = SQLTable_Load("package_attachment", index, index);
 
-        DataRow fileDataRow = attachmentsDataTable.Rows[index];
+        var fileDataRow = attachmentsDataTable.Rows[index];
 
-        int attachmentsDataTableColumnCount = attachmentsDataTable.Columns.Count - 1;
+        var attachmentsDataTableColumnCount = attachmentsDataTable.Columns.Count - 1;
 
-        Byte[] fileArray = (Byte[])fileDataRow.ItemArray[attachmentsDataTableColumnCount];
+        var fileArray = (byte[])fileDataRow.ItemArray[attachmentsDataTableColumnCount];
 
-        string name = (string)fileDataRow.ItemArray[1];
+        var name = (string)fileDataRow.ItemArray[1];
 
-        CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+        var dialog = new CommonOpenFileDialog();
         dialog.InitialDirectory = "C:\\Users";
         dialog.IsFolderPicker = true;
         dialog.ShowDialog();
@@ -180,12 +175,16 @@ public class SQLTable : Grid
             fs.Write(fileArray, 0, fileArray.Length);
         }
     }
+
     public DataTable SQLTable_Load(string tableName, int startIndex, int endIndex)
     {
-        DataTable table = new DataTable();
-        using (MySqlConnection connection = new MySqlConnection(SqlConnectionString))
+        var table = new DataTable();
+        using (var connection = new MySqlConnection(SqlConnectionString))
         {
-            using (MySqlCommand command = new MySqlCommand("SELECT * FROM " + tableName + " WHERE ID >= " + startIndex + " AND ID <= " + endIndex, connection))
+            using (var command =
+                   new MySqlCommand(
+                       "SELECT * FROM " + tableName + " WHERE ID >= " + startIndex + " AND ID <= " + endIndex,
+                       connection))
             {
                 connection.Open();
                 table.Load(command.ExecuteReader());
@@ -195,5 +194,4 @@ public class SQLTable : Grid
 
         return table;
     }
-
 }
