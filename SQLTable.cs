@@ -131,7 +131,7 @@ public class SQLTable : Grid
             int attachRowIndex = 1; //row 0 is header, row 1+ is content
             int attachColIndex = this.ColumnDefinitions.IndexOf((attachmentsColumnDefinition));
 
-            foreach (DataRow row in fileAttachmentsDataTable.Rows)
+            foreach (DataRow row in fileAttachmentsDataTable.Rows)  //test
             {
                 Button downloadButton = new() { Content = "Download", Height = 23 };
                 downloadButton.Tag = attachRowIndex;
