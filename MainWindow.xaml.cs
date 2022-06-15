@@ -21,7 +21,7 @@ namespace StraussOrchestratorCSharp
         public SQLTable Table = new SQLTable();
         public List<Image> ImageMenuList;
 
-        //=====================================
+        //===============Automation Buttons MainMenu======================
         public List<string> Automation_ButtonsList = new List<string>()
         {
             "  Packages  ",
@@ -34,7 +34,7 @@ namespace StraussOrchestratorCSharp
         public List<StackPanel> MainMenuStackPanels = new List<StackPanel>();
 
 
-        //========================================
+        //===============All possible submenu items=========================
         public List<Button> SubMenuButtonsList = new();
         public List<String> SubMenuButtonNamesList = new List<string>()
         {
@@ -54,7 +54,10 @@ namespace StraussOrchestratorCSharp
 
         public void Add_Method(object sender, RoutedEventArgs e)
         {
+            //This entire method is dedicated to the "Add" button.
             //this.IsEnabled = false;
+
+            //Create new window and add a grid
             DummyWindow addWindow = new() {ShowActivated = true, Title= "", Owner = Window.GetWindow(this), WindowStartupLocation = WindowStartupLocation.CenterOwner};
             addWindow.Show();
 
@@ -67,7 +70,8 @@ namespace StraussOrchestratorCSharp
             newGrid.ColumnDefinitions.Add(textBoxColumnDefinition);
 
             foreach (ColumnDefinition col in Table.ColumnDefinitions)
-            {
+            {   //Grid will contains textblocks and textboxes so the user can insert new datarows in the datatable, afterwards
+                //the SQL table will be updated with this new datatable.
                 TextBlock tb = new TextBlock();
                 TextBox inputTextBox = new();
                 var columnName = col.Name.Replace("_Header", "");
@@ -95,6 +99,8 @@ namespace StraussOrchestratorCSharp
                     newGrid.Children.Add(tb);
                     newGrid.Children.Add(inputTextBox);
 
+                    //Several keywords are taken in consideration to avoid certain column values to be edited
+                    //as they are not meant to be edited
                     if (columnName.Contains("Date") == true)
                     {
                         inputTextBox.IsEnabled = false;
@@ -126,6 +132,8 @@ namespace StraussOrchestratorCSharp
         {
             InitializeComponent();
 
+            //Initialize the menu list made of pictures, then set the handlers by using the set_handlers method, see method
+            //for more info.
             ImageMenuList = new List<Image> { Automation_Button, Home_Button, Monitoring_Button, Queues_Button, Assets_Button, Settings_Button };
             set_handlers(ImageMenuList, Image_Button_Click, Image_Button_MouseEnter, Image_Button_MouseLeave);
 
@@ -147,7 +155,9 @@ namespace StraussOrchestratorCSharp
                 NewButton.Name = element.Trim();
 
                 try
-                {
+                {   //This code adds handlers based on the name of the methods
+                    //I wrote this because I was lazy, it uses reflection so it's probably not a good idea
+                    //but since it only triggers once per run I don't think it can do that much damage.
                     MethodInfo method = typeof(MainWindow).GetMethod(NewButton.Name + "_Method");
                     Delegate myDelegate = Delegate.CreateDelegate(typeof(RoutedEventHandler), this, method);
                     NewButton.Click += (RoutedEventHandler)myDelegate;
@@ -210,6 +220,7 @@ namespace StraussOrchestratorCSharp
             DataTable mySQLTables = SQL_Load_DatabaseTables("Server=localhost;User ID=root;Database=straussdatabase");
             List<String> tableList = new List<String>();
 
+            //Get all tables that match name with the sender_name
             foreach (DataRow item in mySQLTables.Rows)
             {
                 if (item.ItemArray[0].ToString().Contains(Sender_Name) == true)
@@ -218,6 +229,7 @@ namespace StraussOrchestratorCSharp
                 }
             }
 
+            //If any match, then create conditional tables
             if (tableList.Contains(Sender_Name + "_list") == true && tableList.Contains(Sender_Name + "_attachment") == true)
             {
                 CreateTable("Server=localhost;User ID=root;Database=straussdatabase", tableList[tableList.IndexOf(Sender_Name + "_list")], tableList[tableList.IndexOf(Sender_Name + "_attachment")], 0, 10);
@@ -270,6 +282,7 @@ namespace StraussOrchestratorCSharp
         }
         private void Image_Button_MouseEnter(object sender, MouseEventArgs e)
         {
+            //Uses naming conventions to dynamically assign bitmapimages based on event types
             string name = ((Image)sender).Name.Split("_")[0];
 
             ((Image)sender).Source = new BitmapImage(new Uri(name + "_Images/highlight_" + name + ".png", UriKind.Relative));
@@ -281,6 +294,8 @@ namespace StraussOrchestratorCSharp
         }
         private void Image_Button_MouseLeave(object sender, MouseEventArgs e)
         {
+            //Uses naming conventions to dynamically assign bitmapimages based on event types
+
             string name = ((Image)sender).Name.Split("_")[0];
 
             ((Image)sender).Source = new BitmapImage(new Uri(name + "_Images/no_highlight_" + name + ".png", UriKind.Relative));
@@ -293,6 +308,9 @@ namespace StraussOrchestratorCSharp
         }
         private void Image_Button_Click(object sender, MouseButtonEventArgs e)
         {
+            //Uses naming conventions to dynamically assign bitmapimages based on event types
+            //It does get even more bizzare the more you look into this code.
+            //Try not to stare into it because it will stare back.
             string name = ((Image)sender).Name;
 
             foreach (var image in ImageMenuList)
@@ -304,6 +322,7 @@ namespace StraussOrchestratorCSharp
                     ((Image)image).Source = new BitmapImage(new Uri(name.Split("_")[0] + "_Images/highlight_" + name.Split("_")[0] + "_selected.png", UriKind.Relative));
                     ((Image)image).Tag = "IsSelected";
 
+                    //Dynamically assign grid based on button name by using naming conventions.
                     for (int i = 0; i < VisualTreeHelper.GetChildrenCount(MainGrid); i++)
                     {
                         Visual childVisual = (Visual)VisualTreeHelper.GetChild(MainGrid, i);
@@ -344,10 +363,7 @@ namespace StraussOrchestratorCSharp
         }
         private void MainGrid_Loaded(object sender, RoutedEventArgs e)
         {
-            // get all public static methods of MyClass type
-            //MethodInfo[] methodInfos = typeof(MainWindow).GetMethod();
 
-            //GetMethods(BindingFlags.Public | BindingFlags.Static);
             //"Server=localhost;User ID=root;Database=straussdatabase"
 
         }
@@ -389,6 +405,8 @@ namespace StraussOrchestratorCSharp
 
         public DataTable SQL_Load_SubMenuItems(string SqlConnectionString, string columnName)
         {
+
+            //This function is used to load settings for the MainMenu -> SubMenu items.
             DataTable table = new DataTable();
             using (MySqlConnection connection = new MySqlConnection(SqlConnectionString))
             {
