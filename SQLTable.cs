@@ -116,7 +116,7 @@ public class SQLTable : Grid
                     columnIndex++;
                 }
 
-                columnIndex = 0;
+                columnIndex = 0; //Test
             }
         }
         //=======================================
