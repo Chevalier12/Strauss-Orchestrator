@@ -51,14 +51,33 @@ namespace StraussOrchestratorCSharp
         public StackPanel SubMenuStackPanel = new();
         //================================================
 
+        public void Ok_Method(object sender, RoutedEventArgs e)
+        {
+            this.IsEnabled = true;
+            //Send all rows to SQL
+        }
+
+        public void Cancel_Method(object sender, RoutedEventArgs e)
+        {
+            this.IsEnabled = true;
+            //Do nothing, user cancelled prompt
+        }
+
+        public void DummyWindow_Closed(object sender, EventArgs e)
+        {
+            this.IsEnabled = true;
+            //User closed window forcefully.
+        }
         public void Add_Method(object sender, RoutedEventArgs e)
         {
             //This entire method is dedicated to the "Add" button.
-            //this.IsEnabled = false;
+            this.IsEnabled = false;
 
             //Create new window and add a grid
             DummyWindow addWindow = new() {ShowActivated = true, Title= "", Owner = Window.GetWindow(this), WindowStartupLocation = WindowStartupLocation.CenterOwner};
             addWindow.Show();
+
+            addWindow.Closed += DummyWindow_Closed!;
 
             Grid newGrid = new Grid() {HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center};
 
@@ -118,6 +137,23 @@ namespace StraussOrchestratorCSharp
             }
 
             
+            //Add OK and Cancel buttons to the grid
+            RowDefinition confirmationsRowDefinition = new();
+            confirmationsRowDefinition.Height = new GridLength(30);
+            newGrid.RowDefinitions.Add(confirmationsRowDefinition);
+            int colIndex = 0;
+
+            foreach (var SubMenuControl in SubMenuButtonsList)
+            {
+                if (SubMenuControl.Name.Contains("Ok") || SubMenuControl.Name.Contains("Cancel"))
+                {
+                    newGrid.Children.Add(SubMenuControl);
+                    Grid.SetRow(SubMenuControl, newGrid.RowDefinitions.IndexOf(confirmationsRowDefinition));
+                    Grid.SetColumn(SubMenuControl, colIndex);
+                    colIndex += 1;
+                }
+            }
+
             addWindow.DummyWindow_MainGrid.Children.Add(newGrid);
             addWindow.SizeToContent = SizeToContent.Width;
             addWindow.SizeToContent = SizeToContent.Height;
