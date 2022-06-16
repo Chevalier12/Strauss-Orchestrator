@@ -2,7 +2,7 @@
 
 namespace StraussOrchestratorCSharp
 {
-    public class SQLBrowseControls : Grid
+    public class SqlBrowseControls : Grid
     {
 
     }

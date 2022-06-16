@@ -8,9 +8,9 @@ using MySqlConnector;
 
 namespace StraussOrchestratorCSharp;
 
-public class SQLTable : Grid
+public class SqlTable : Grid
 {
-    public SQLBrowseControls InteractiveBrowseControls;
+    public SqlBrowseControls InteractiveBrowseControls;
     public string SqlConnectionString;
 
     public void CreateGrid(DataTable dataTable, int startIndex, int endIndex, DataTable fileAttachmentsDataTable = null)
@@ -148,7 +148,7 @@ public class SQLTable : Grid
     {
         var rowCheckBox = (CheckBox)sender;
 
-        var row_index = int.Parse(rowCheckBox.Content.ToString());
+        var rowIndex = int.Parse(rowCheckBox.Content.ToString());
     }
 
     private void Download_Button_Click(object sender, RoutedEventArgs e)

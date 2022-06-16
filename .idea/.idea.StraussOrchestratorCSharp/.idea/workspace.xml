@@ -5,11 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="edfd5fa3-bb35-4401-b8d5-8b396612fcb4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.StraussOrchestratorCSharp/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.StraussOrchestratorCSharp/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.StraussOrchestratorCSharp/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.StraussOrchestratorCSharp/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.StraussOrchestratorCSharp/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.StraussOrchestratorCSharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraussOrchestratorCSharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQLBrowseControls.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SQLBrowseControls.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SQLTable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SQLTable.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +64,7 @@
       <updated>1655384556722</updated>
       <workItem from="1655384568120" duration="369000" />
       <workItem from="1655384962684" duration="970000" />
-      <workItem from="1655386177481" duration="2342000" />
+      <workItem from="1655386177481" duration="2433000" />
     </task>
     <servers />
   </component>

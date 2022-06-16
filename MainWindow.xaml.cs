@@ -17,18 +17,18 @@ namespace StraussOrchestratorCSharp
     /// </summary>
     public partial class MainWindow : Window
     {
-        public SQLTable Table = new();
+        public SqlTable Table = new();
         public List<Image> ImageMenuList;
 
         //===============Automation Buttons MainMenu======================
-        public List<string> Automation_ButtonsList = new()
+        public List<string> AutomationButtonsList = new()
         {
             "  Packages  ",
             "  Jobs  ",
             "  Machines  "
         };
 
-        public StackPanel Automation_StackPanel;
+        public StackPanel AutomationStackPanel;
 
         public List<StackPanel> MainMenuStackPanels = new();
 
@@ -143,13 +143,13 @@ namespace StraussOrchestratorCSharp
             newGrid.RowDefinitions.Add(confirmationsRowDefinition);
             int colIndex = 0;
 
-            foreach (var SubMenuControl in SubMenuButtonsList)
+            foreach (var subMenuControl in SubMenuButtonsList)
             {
-                if (SubMenuControl.Name.Contains("Ok") || SubMenuControl.Name.Contains("Cancel"))
+                if (subMenuControl.Name.Contains("Ok") || subMenuControl.Name.Contains("Cancel"))
                 {
-                    newGrid.Children.Add(SubMenuControl);
-                    Grid.SetRow(SubMenuControl, newGrid.RowDefinitions.IndexOf(confirmationsRowDefinition));
-                    Grid.SetColumn(SubMenuControl, colIndex);
+                    newGrid.Children.Add(subMenuControl);
+                    Grid.SetRow(subMenuControl, newGrid.RowDefinitions.IndexOf(confirmationsRowDefinition));
+                    Grid.SetColumn(subMenuControl, colIndex);
                     colIndex += 1;
                 }
             }
@@ -175,7 +175,7 @@ namespace StraussOrchestratorCSharp
             //Create all sub-menu buttons
             foreach (var element in SubMenuButtonNamesList)
             {
-                Button NewButton = new Button
+                Button newButton = new Button
                 {
                     Background = new SolidColorBrush(new Color { A = 100, R = 231, G = 233, B = 245 }),
                     FontFamily = new FontFamily("Century Gothic"),
@@ -192,24 +192,24 @@ namespace StraussOrchestratorCSharp
                 {   //This code adds handlers based on the name of the methods
                     //I wrote this because I was lazy, it uses reflection so it's probably not a good idea
                     //but since it only triggers once per run I don't think it can do that much damage.
-                    MethodInfo method = typeof(MainWindow).GetMethod(NewButton.Name + "_Method");
+                    MethodInfo method = typeof(MainWindow).GetMethod(newButton.Name + "_Method");
                     Delegate myDelegate = Delegate.CreateDelegate(typeof(RoutedEventHandler), this, method);
-                    NewButton.Click += (RoutedEventHandler)myDelegate;
+                    newButton.Click += (RoutedEventHandler)myDelegate;
                 }
                 catch (Exception e)
                 {
                     //MessageBox.Show("error");
                 }
 
-                SubMenuButtonsList.Add(NewButton);
+                SubMenuButtonsList.Add(newButton);
             }
 
             //Create Automation main menu
-            Automation_StackPanel = CreateMainMenu(Automation_ButtonsList);
-            Automation_StackPanel.Name = "Automation";
+            AutomationStackPanel = CreateMainMenu(AutomationButtonsList);
+            AutomationStackPanel.Name = "Automation";
 
             //Contain Main Menu panels in here
-            MainMenuStackPanels.Add(Automation_StackPanel);
+            MainMenuStackPanels.Add(AutomationStackPanel);
         }
 
         private StackPanel CreateMainMenu(List<String> nameList)
@@ -249,45 +249,45 @@ namespace StraussOrchestratorCSharp
 
         private void Menu_Handlers(object sender, RoutedEventArgs e)
         {
-            String Sender_Name = ((Button)sender).Content.ToString().ToLower().Trim();
+            String senderName = ((Button)sender).Content.ToString().ToLower().Trim();
 
-            DataTable mySQLTables = SQL_Load_DatabaseTables("Server=localhost;User ID=root;Database=straussdatabase");
+            DataTable mySqlTables = SQL_Load_DatabaseTables("Server=localhost;User ID=root;Database=straussdatabase");
             List<String> tableList = new List<String>();
 
             //Get all tables that match name with the sender_name
-            foreach (DataRow item in mySQLTables.Rows)
+            foreach (DataRow item in mySqlTables.Rows)
             {
-                if (item.ItemArray[0].ToString().Contains(Sender_Name))
+                if (item.ItemArray[0].ToString().Contains(senderName))
                 {
                     tableList.Add(item.ItemArray[0].ToString());
                 }
             }
 
             //If any match, then create conditional tables
-            if (tableList.Contains(Sender_Name + "_list") && tableList.Contains(Sender_Name + "_attachment"))
+            if (tableList.Contains(senderName + "_list") && tableList.Contains(senderName + "_attachment"))
             {
-                CreateTable("Server=localhost;User ID=root;Database=straussdatabase", tableList[tableList.IndexOf(Sender_Name + "_list")], tableList[tableList.IndexOf(Sender_Name + "_attachment")], 0, 10);
+                CreateTable("Server=localhost;User ID=root;Database=straussdatabase", tableList[tableList.IndexOf(senderName + "_list")], tableList[tableList.IndexOf(senderName + "_attachment")], 0, 10);
             }
-            else if (tableList.Contains(Sender_Name + "_list") && tableList.Contains(Sender_Name + "_attachment") == false)
+            else if (tableList.Contains(senderName + "_list") && tableList.Contains(senderName + "_attachment") == false)
             {
-                CreateTable("Server=localhost;User ID=root;Database=straussdatabase", tableList[tableList.IndexOf(Sender_Name + "_list")], null, 0, 10);
+                CreateTable("Server=localhost;User ID=root;Database=straussdatabase", tableList[tableList.IndexOf(senderName + "_list")], null, 0, 10);
             }
 
             //Create submenu for the table based on sender_name
             SubMenuStackPanel.Children.Clear();
             SubMenuStackPanel = new() { Orientation = Orientation.Horizontal };
-            DataTable subMenuItems = SQL_Load_SubMenuItems("Server=localhost;User ID=root;Database=straussdatabase", Sender_Name);
+            DataTable subMenuItems = SQL_Load_SubMenuItems("Server=localhost;User ID=root;Database=straussdatabase", senderName);
 
             MainGrid.Children.Remove(SubMenuStackPanel);
 
-            foreach (Button SubMenuItem in SubMenuButtonsList)
+            foreach (Button subMenuItem in SubMenuButtonsList)
             {
-                foreach (DataRow Item in subMenuItems.Rows)
+                foreach (DataRow item in subMenuItems.Rows)
                 {
-                    if (Item.ItemArray[0].ToString().Contains(SubMenuItem.Name))
+                    if (item.ItemArray[0].ToString().Contains(subMenuItem.Name))
                     {
 
-                        SubMenuStackPanel.Children.Add(SubMenuItem);
+                        SubMenuStackPanel.Children.Add(subMenuItem);
                         SubMenuStackPanel.Children.Add(new Separator()
                             { Width = 10, Background = new SolidColorBrush(Colors.White) });
                     }
@@ -402,31 +402,31 @@ namespace StraussOrchestratorCSharp
 
         }
 
-        public void CreateTable(String myConnectionString, String TableName, [Optional] String AttachmentTableName, int StartIndex, int EndIndex)
+        public void CreateTable(String myConnectionString, String tableName, [Optional] String attachmentTableName, int startIndex, int endIndex)
         {
             MainGrid.Children.Remove(Table);
-            Table = new SQLTable
+            Table = new SqlTable
             {
                 SqlConnectionString = myConnectionString
             };
 
-            if (AttachmentTableName == null)
+            if (attachmentTableName == null)
             {
-                Table.CreateGrid(Table.SQLTable_Load(TableName, StartIndex, EndIndex), StartIndex, EndIndex,
+                Table.CreateGrid(Table.SQLTable_Load(tableName, startIndex, endIndex), startIndex, endIndex,
                     null);
             }
             else
             {
-                Table.CreateGrid(Table.SQLTable_Load(TableName, StartIndex, EndIndex), StartIndex, EndIndex,
-                    Table.SQLTable_Load(AttachmentTableName, StartIndex, EndIndex));
+                Table.CreateGrid(Table.SQLTable_Load(tableName, startIndex, endIndex), startIndex, endIndex,
+                    Table.SQLTable_Load(attachmentTableName, startIndex, endIndex));
             }
             MainGrid.Children.Add(Table);
 
         }
-        public DataTable SQL_Load_DatabaseTables(string SqlConnectionString)
+        public DataTable SQL_Load_DatabaseTables(string sqlConnectionString)
         {
             DataTable table = new DataTable();
-            using (MySqlConnection connection = new MySqlConnection(SqlConnectionString))
+            using (MySqlConnection connection = new MySqlConnection(sqlConnectionString))
             {
                 using (MySqlCommand command = new MySqlCommand("SHOW TABLES;", connection))
                 {
@@ -439,12 +439,12 @@ namespace StraussOrchestratorCSharp
             return table;
         }
 
-        public DataTable SQL_Load_SubMenuItems(string SqlConnectionString, string columnName)
+        public DataTable SQL_Load_SubMenuItems(string sqlConnectionString, string columnName)
         {
 
             //This function is used to load settings for the MainMenu -> SubMenu items.
             DataTable table = new DataTable();
-            using (MySqlConnection connection = new MySqlConnection(SqlConnectionString))
+            using (MySqlConnection connection = new MySqlConnection(sqlConnectionString))
             {
                 using (MySqlCommand command = new MySqlCommand("SELECT " + columnName + " FROM category_submenu", connection))
                 {
