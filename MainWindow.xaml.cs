@@ -7,13 +7,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using MySqlConnector;
 
 namespace StraussOrchestratorCSharp;
 
 /// <summary>
 ///     Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow
 {
     //===============Automation Buttons MainMenu======================
     public List<string> AutomationButtonsList = new()
@@ -258,7 +259,7 @@ public partial class MainWindow : Window
     {
         var senderName = ((Button)sender).Content.ToString().ToLower().Trim();
 
-        var mySqlTables = Library.SQL_Load_DatabaseTables("Server=localhost;User ID=root;Database=straussdatabase");
+        var mySqlTables = SQL_Load_DatabaseTables("Server=localhost;User ID=root;Database=straussdatabase");
         var tableList = new List<string>();
 
         //Get all tables that match name with the sender_name
@@ -279,7 +280,7 @@ public partial class MainWindow : Window
         SubMenuStackPanel.Children.Clear();
         SubMenuStackPanel = new StackPanel { Orientation = Orientation.Horizontal };
         var subMenuItems =
-            Library.SQL_Load_SubMenuItems("Server=localhost;User ID=root;Database=straussdatabase", senderName);
+            SQL_Load_SubMenuItems("Server=localhost;User ID=root;Database=straussdatabase", senderName);
 
         MainGrid.Children.Remove(SubMenuStackPanel);
 
@@ -414,5 +415,37 @@ public partial class MainWindow : Window
             Table.CreateGrid(Table.SQLTable_Load(tableName, startIndex, endIndex), startIndex, endIndex,
                 Table.SQLTable_Load(attachmentTableName, startIndex, endIndex));
         MainGrid.Children.Add(Table);
+    }
+    public static DataTable SQL_Load_DatabaseTables(string sqlConnectionString)
+    {
+        var table = new DataTable();
+        using (var connection = new MySqlConnection(sqlConnectionString))
+        {
+            using (var command = new MySqlCommand("SHOW TABLES;", connection))
+            {
+                connection.Open();
+                table.Load(command.ExecuteReader());
+                connection.Close();
+            }
+        }
+
+        return table;
+    }
+
+    public static DataTable SQL_Load_SubMenuItems(string sqlConnectionString, string columnName)
+    {
+        //This function is used to load settings for the MainMenu -> SubMenu items.
+        var table = new DataTable();
+        using (var connection = new MySqlConnection(sqlConnectionString))
+        {
+            using (var command = new MySqlCommand("SELECT " + columnName + " FROM category_submenu", connection))
+            {
+                connection.Open();
+                table.Load(command.ExecuteReader());
+                connection.Close();
+            }
+        }
+
+        return table;
     }
 }
