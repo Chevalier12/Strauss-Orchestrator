@@ -130,8 +130,11 @@ public class SqlTable : Grid
 
             foreach (DataRow row in fileAttachmentsDataTable.Rows) //test
             {
-                Button downloadButton = new() { Content = "Download", Height = 23 };
-                downloadButton.Tag = attachRowIndex;
+                Button downloadButton = new()
+                {
+                    Content = "Download", Height = 23,
+                    Tag = attachRowIndex
+                };
                 downloadButton.Click += Download_Button_Click;
 
                 SetRow(downloadButton, attachRowIndex);

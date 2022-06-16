@@ -1,123 +1,123 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Assets_Images\highlight_assets.png" />
-    <None Remove="Assets_Images\highlight_assets_selected.png" />
-    <None Remove="Assets_Images\no_highlight_assets.png" />
-    <None Remove="Assets_Images\no_highlight_assets_selected.png" />
-    <None Remove="Automation_Images\highlight_automation.png" />
-    <None Remove="Automation_Images\highlight_automation_selected.png" />
-    <None Remove="Automation_Images\no_highlight_automation.png" />
-    <None Remove="Automation_Images\no_highlight_automation_selected.png" />
-    <None Remove="Home_Images\highlight_home.png" />
-    <None Remove="Home_Images\highlight_home_selected.png" />
-    <None Remove="Home_Images\no_highlight_home.png" />
-    <None Remove="Home_Images\no_highlight_home_selected.png" />
-    <None Remove="Monitoring_Images\highlight_monitoring.png" />
-    <None Remove="Monitoring_Images\highlight_monitoring_selected.png" />
-    <None Remove="Monitoring_Images\no_highlight_monitoring.png" />
-    <None Remove="Monitoring_Images\no_highlight_monitoring_selected.png" />
-    <None Remove="Queues_Images\highlight_queues.png" />
-    <None Remove="Queues_Images\highlight_queues_selected.png" />
-    <None Remove="Queues_Images\no_highlight_queues.png" />
-    <None Remove="Queues_Images\no_highlight_queues_selected.png" />
-    <None Remove="Settings_Images\highlight_settings.png" />
-    <None Remove="Settings_Images\highlight_settings_selected.png" />
-    <None Remove="Settings_Images\no_highlight_settings.png" />
-    <None Remove="Settings_Images\no_highlight_settings_selected.png" />
-    <None Remove="Strauss_Logo.png" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="Assets_Images\highlight_assets.png"/>
+        <None Remove="Assets_Images\highlight_assets_selected.png"/>
+        <None Remove="Assets_Images\no_highlight_assets.png"/>
+        <None Remove="Assets_Images\no_highlight_assets_selected.png"/>
+        <None Remove="Automation_Images\highlight_automation.png"/>
+        <None Remove="Automation_Images\highlight_automation_selected.png"/>
+        <None Remove="Automation_Images\no_highlight_automation.png"/>
+        <None Remove="Automation_Images\no_highlight_automation_selected.png"/>
+        <None Remove="Home_Images\highlight_home.png"/>
+        <None Remove="Home_Images\highlight_home_selected.png"/>
+        <None Remove="Home_Images\no_highlight_home.png"/>
+        <None Remove="Home_Images\no_highlight_home_selected.png"/>
+        <None Remove="Monitoring_Images\highlight_monitoring.png"/>
+        <None Remove="Monitoring_Images\highlight_monitoring_selected.png"/>
+        <None Remove="Monitoring_Images\no_highlight_monitoring.png"/>
+        <None Remove="Monitoring_Images\no_highlight_monitoring_selected.png"/>
+        <None Remove="Queues_Images\highlight_queues.png"/>
+        <None Remove="Queues_Images\highlight_queues_selected.png"/>
+        <None Remove="Queues_Images\no_highlight_queues.png"/>
+        <None Remove="Queues_Images\no_highlight_queues_selected.png"/>
+        <None Remove="Settings_Images\highlight_settings.png"/>
+        <None Remove="Settings_Images\highlight_settings_selected.png"/>
+        <None Remove="Settings_Images\no_highlight_settings.png"/>
+        <None Remove="Settings_Images\no_highlight_settings_selected.png"/>
+        <None Remove="Strauss_Logo.png"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="MySqlConnector" Version="2.1.10" />
-    <PackageReference Include="System.Data.OleDb" Version="6.0.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
-    <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MySqlConnector" Version="2.1.10"/>
+        <PackageReference Include="System.Data.OleDb" Version="6.0.0"/>
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.3"/>
+        <PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Assets_Images\highlight_assets.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets_Images\highlight_assets_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets_Images\no_highlight_assets.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Assets_Images\no_highlight_assets_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Automation_Images\highlight_automation.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Automation_Images\highlight_automation_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Automation_Images\no_highlight_automation.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Automation_Images\no_highlight_automation_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Home_Images\highlight_home.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Home_Images\highlight_home_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Home_Images\no_highlight_home.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Home_Images\no_highlight_home_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Monitoring_Images\highlight_monitoring.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Monitoring_Images\highlight_monitoring_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Monitoring_Images\no_highlight_monitoring.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Monitoring_Images\no_highlight_monitoring_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Queues_Images\highlight_queues.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Queues_Images\highlight_queues_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Queues_Images\no_highlight_queues.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Queues_Images\no_highlight_queues_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Settings_Images\highlight_settings.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Settings_Images\highlight_settings_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Settings_Images\no_highlight_settings.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Settings_Images\no_highlight_settings_selected.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Strauss_Logo.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
+    <ItemGroup>
+        <Resource Include="Assets_Images\highlight_assets.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Assets_Images\highlight_assets_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Assets_Images\no_highlight_assets.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Assets_Images\no_highlight_assets_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Automation_Images\highlight_automation.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Automation_Images\highlight_automation_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Automation_Images\no_highlight_automation.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Automation_Images\no_highlight_automation_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Home_Images\highlight_home.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Home_Images\highlight_home_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Home_Images\no_highlight_home.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Home_Images\no_highlight_home_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Monitoring_Images\highlight_monitoring.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Monitoring_Images\highlight_monitoring_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Monitoring_Images\no_highlight_monitoring.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Monitoring_Images\no_highlight_monitoring_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Queues_Images\highlight_queues.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Queues_Images\highlight_queues_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Queues_Images\no_highlight_queues.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Queues_Images\no_highlight_queues_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Settings_Images\highlight_settings.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Settings_Images\highlight_settings_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Settings_Images\no_highlight_settings.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Settings_Images\no_highlight_settings_selected.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+        <Resource Include="Strauss_Logo.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Resource>
+    </ItemGroup>
 
 </Project>

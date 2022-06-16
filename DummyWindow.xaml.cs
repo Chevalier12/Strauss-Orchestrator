@@ -1,15 +1,14 @@
 ﻿using System.Windows;
 
-namespace StraussOrchestratorCSharp
+namespace StraussOrchestratorCSharp;
+
+/// <summary>
+///     Interaction logic for DummyWindow.xaml
+/// </summary>
+public partial class DummyWindow : Window
 {
-    /// <summary>
-    /// Interaction logic for DummyWindow.xaml
-    /// </summary>
-    public partial class DummyWindow : Window
+    public DummyWindow()
     {
-        public DummyWindow()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

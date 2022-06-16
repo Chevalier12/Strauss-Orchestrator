@@ -5,15 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="edfd5fa3-bb35-4401-b8d5-8b396612fcb4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Library.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.StraussOrchestratorCSharp/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.StraussOrchestratorCSharp/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MainWindow.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/MainWindow.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SQLBrowseControls.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SQLBrowseControls.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SQLTable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SQLTable.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5956701c92ec47bc98145555cd08eafca23890/79/c8e3e8c0/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -64,7 +68,7 @@
       <updated>1655384556722</updated>
       <workItem from="1655384568120" duration="369000" />
       <workItem from="1655384962684" duration="970000" />
-      <workItem from="1655386177481" duration="2433000" />
+      <workItem from="1655386177481" duration="5316000" />
     </task>
     <servers />
   </component>

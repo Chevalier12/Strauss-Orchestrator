@@ -1,11 +1,7 @@
 ﻿using System.Windows.Controls;
 
-namespace StraussOrchestratorCSharp
+namespace StraussOrchestratorCSharp;
+
+public class SqlBrowseControls : Grid
 {
-    public class SqlBrowseControls : Grid
-    {
-
-    }
-
 }
-    
