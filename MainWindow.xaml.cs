@@ -74,7 +74,7 @@ namespace StraussOrchestratorCSharp
             this.IsEnabled = false;
 
             //Create new window and add a grid
-            DummyWindow addWindow = new() {ShowActivated = true, Title= "", Owner = Window.GetWindow(this), WindowStartupLocation = WindowStartupLocation.CenterOwner};
+            DummyWindow addWindow = new() {ShowActivated = true, Title= Table.Name + " Editor", Owner = Window.GetWindow(this), WindowStartupLocation = WindowStartupLocation.CenterOwner};
             addWindow.Show();
 
             addWindow.Closed += DummyWindow_Closed!;

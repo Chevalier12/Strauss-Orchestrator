@@ -188,6 +188,7 @@ public class SQLTable : Grid
             {
                 connection.Open();
                 table.Load(command.ExecuteReader());
+                table.TableName = tableName;
                 connection.Close();
             }
         }
