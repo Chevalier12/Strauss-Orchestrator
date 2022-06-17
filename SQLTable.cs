@@ -1,5 +1,8 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -117,22 +120,19 @@ public class SqlTable : Grid
                 columnIndex = 0;
             }
         //=======================================
-
+        ColumnDefinition attachmentsColumnDefinition = new() { Width = new GridLength(100) };
+        ColumnDefinitions.Add(attachmentsColumnDefinition);
+        var attachRowIndex = 1; //row 0 is header, row 1+ is content
+        var attachColIndex = ColumnDefinitions.IndexOf(attachmentsColumnDefinition);
+        
         //If attachments DataTable is provided, then create it without storing it, just add event...
         if (fileAttachmentsDataTable != null)
         {
-            ColumnDefinition attachmentsColumnDefinition = new() { Width = new GridLength(100) };
-            ColumnDefinitions.Add(attachmentsColumnDefinition);
-
-
-            var attachRowIndex = 1; //row 0 is header, row 1+ is content
-            var attachColIndex = ColumnDefinitions.IndexOf(attachmentsColumnDefinition);
-
             foreach (DataRow row in fileAttachmentsDataTable.Rows) //test
             {
                 Button downloadButton = new()
                 {
-                    Content = "Download", Height = 23,
+                    Content = "Download", Height = 23, Width = 100,
                     Tag = attachRowIndex
                 };
                 downloadButton.Click += Download_Button_Click;
@@ -143,6 +143,49 @@ public class SqlTable : Grid
 
                 attachRowIndex += 1;
             }
+
+        }
+        
+        //Find what ID's are missing from the attachments table.
+        List<int> missingIDList = new();
+        bool checkerBool = new();
+        
+        foreach (DataRow dtRow in dataTable.Rows)
+        {
+            checkerBool = false;
+            foreach (DataRow attRow in fileAttachmentsDataTable.Rows)
+            {
+                if (attRow.ItemArray.Contains(dtRow.ItemArray[0].ToString()) == true)
+                {
+                    checkerBool = true;
+                }
+                else
+                {
+                    missingIDList.Add(Int32.Parse(dtRow.ItemArray[0].ToString()));
+                    checkerBool = false;
+                }
+            }
+
+            if (!checkerBool && !missingIDList.Contains(Int32.Parse(dtRow.ItemArray[0].ToString())))
+            {
+                missingIDList.Add(Int32.Parse(dtRow.ItemArray[0].ToString()));
+            }
+        }
+            
+        //Add upload button for the ID's that are missing from the attachments table.
+        foreach (var item in missingIDList)
+        {
+            Button uploadButton = new()
+            {
+                Content = "Upload", Height = 23, Width = 100,
+                Margin = new Thickness(0,-5,0,0),
+                Tag = item
+            };
+            uploadButton.Click += Download_Button_Click;
+
+            SetRow(uploadButton, item);
+            SetColumn(uploadButton, attachColIndex);
+            Children.Add(uploadButton);
         }
         //============================================
     }

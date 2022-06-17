@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -126,7 +127,7 @@ public partial class MainWindow
                 valueName = ((TextBox)item).Text;
             }
             
-            MessageBox.Show(columnName + ":" + valueName);
+            
         }
         SubWindow.Close();
         //Send all rows to SQL
@@ -222,6 +223,8 @@ public partial class MainWindow
                     comboTextBox.FontFamily = new FontFamily("Century Gothic");
                     comboTextBox.HorizontalAlignment = HorizontalAlignment.Center;
                     comboTextBox.IsEditable = false;
+                    comboTextBox.ItemsSource = CreateEnumFromDT(SQL_Load_SpecificColumn("Server=192.168.1.137;User ID=root;Database=straussdatabase",
+                        tb.Text.Replace(":","").Trim(), "column_dropboxes"));
                     newGrid.Children.Add(comboTextBox);
                     Grid.SetRow(comboTextBox, newGrid.RowDefinitions.IndexOf(contentRowDefinition));
                     Grid.SetColumn(comboTextBox, 1);
@@ -273,9 +276,7 @@ public partial class MainWindow
 
         SubWindow.DummyWindow_MainGrid.Children.Add(newGrid);
         SubWindow.Width = 400;
-        SubWindow.SizeToContent = SizeToContent.Height;
-        //addWindow.Width += 30;
-        //addWindow.Height += 30;
+        SubWindow.Height = newGrid.Children.Count * 25;
         SubWindow.ResizeMode = ResizeMode.NoResize;
         SubWindow.Show();
     }
@@ -323,7 +324,7 @@ public partial class MainWindow
     {
         var senderName = ((Button)sender).Content.ToString().ToLower().Trim();
 
-        var mySqlTables = SQL_Load_DatabaseTables("Server=localhost;User ID=root;Database=straussdatabase");
+        var mySqlTables = SQL_Load_DatabaseTables("Server=192.168.1.137;User ID=root;Database=straussdatabase");
         var tableList = new List<string>();
 
         //Get all tables that match name with the sender_name
@@ -332,19 +333,19 @@ public partial class MainWindow
                 tableList.Add(item.ItemArray[0].ToString());
 
         //If any match, then create conditional tables
-        if (tableList.Contains(senderName + "_list") && tableList.Contains(senderName + "_attachment"))
-            CreateTable("Server=localhost;User ID=root;Database=straussdatabase",
+        if (tableList.Contains(senderName + "_list") && tableList.Contains(senderName + "_attachments"))
+            CreateTable("Server=192.168.1.137;User ID=root;Database=straussdatabase",
                 tableList[tableList.IndexOf(senderName + "_list")],
-                tableList[tableList.IndexOf(senderName + "_attachment")], 0, 10);
-        else if (tableList.Contains(senderName + "_list") && tableList.Contains(senderName + "_attachment") == false)
-            CreateTable("Server=localhost;User ID=root;Database=straussdatabase",
+                tableList[tableList.IndexOf(senderName + "_attachments")], 0, 10);
+        else if (tableList.Contains(senderName + "_list") && tableList.Contains(senderName + "_attachments") == false)
+            CreateTable("Server=192.168.1.137;User ID=root;Database=straussdatabase",
                 tableList[tableList.IndexOf(senderName + "_list")], null, 0, 10);
 
         //Create submenu for the table based on sender_name
         SubMenuStackPanel.Children.Clear();
         SubMenuStackPanel = new StackPanel { Orientation = Orientation.Horizontal };
         var subMenuItems =
-            SQL_Load_SpecificColumn("Server=localhost;User ID=root;Database=straussdatabase", senderName, "category_submenu");
+            SQL_Load_SpecificColumn("Server=192.168.1.137;User ID=root;Database=straussdatabase", senderName, "category_submenu");
 
         MainGrid.Children.Remove(SubMenuStackPanel);
 
@@ -461,7 +462,7 @@ public partial class MainWindow
 
     private void MainGrid_Loaded(object sender, RoutedEventArgs e)
     {
-        //"Server=localhost;User ID=root;Database=straussdatabase"
+        //"Server=192.168.1.137;User ID=root;Database=straussdatabase"
     }
 
     public void CreateTable(string myConnectionString, string tableName, [Optional] string attachmentTableName,
@@ -502,7 +503,7 @@ public partial class MainWindow
         var table = new DataTable();
         using (var connection = new MySqlConnection(sqlConnectionString))
         {
-            using (var command = new MySqlCommand("SELECT " + columnName + " FROM " + tableName, connection))
+            using (var command = new MySqlCommand("SELECT `" + columnName + "` FROM `" + tableName + "`", connection))
             {
                 connection.Open();
                 table.Load(command.ExecuteReader());
@@ -511,5 +512,16 @@ public partial class MainWindow
         }
 
         return table;
+    }
+
+    private IEnumerable<string> CreateEnumFromDT(DataTable dataTable)
+    {
+        List<string> list = new();
+        foreach (DataRow dataTableRow in dataTable.Rows)
+        {
+            list.Add(dataTableRow.ItemArray[0].ToString());
+        }
+
+        return list.AsEnumerable();
     }
 }
