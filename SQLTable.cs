@@ -192,6 +192,7 @@ public class SqlTable : Grid
                 connection.Open();
                 table.Load(command.ExecuteReader());
                 table.TableName = tableName;
+                this.Name = tableName;
                 connection.Close();
             }
         }

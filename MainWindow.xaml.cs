@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.WindowsAPICodePack.Shell.Interop;
 using MySqlConnector;
 
 namespace StraussOrchestratorCSharp;
@@ -16,12 +17,15 @@ namespace StraussOrchestratorCSharp;
 /// </summary>
 public partial class MainWindow
 {
+    //Editor Window
+    public DummyWindow SubWindow;
     //===============Automation Buttons MainMenu======================
     public List<string> AutomationButtonsList = new()
     {
         "  Packages  ",
         "  Jobs  ",
-        "  Machines  "
+        "  Machines  ",
+        "  Scheduling  "
     };
 
     public StackPanel AutomationStackPanel;
@@ -101,40 +105,70 @@ public partial class MainWindow
     }
     //================================================
 
+    public Boolean OKCancel_Pressed;
     public void Ok_Method(object sender, RoutedEventArgs e)
     {
+        OKCancel_Pressed = true;
         IsEnabled = true;
+        
+        foreach (var item in ((Grid)SubWindow.DummyWindow_MainGrid.Children[0]).Children)
+        {
+            string columnName = null;
+            string valueName = null;
+            
+            if (Grid.GetColumn((UIElement)item) == 0 && typeof(TextBlock) == item.GetType())
+            {
+                columnName = ((TextBlock)item).Text.Split(" ")[0];
+            }   
+            
+            if (Grid.GetColumn((UIElement)item) == 0 && typeof(TextBox) == item.GetType())
+            {
+                valueName = ((TextBox)item).Text;
+            }
+            
+            MessageBox.Show(columnName + ":" + valueName);
+        }
+        SubWindow.Close();
         //Send all rows to SQL
     }
 
     public void Cancel_Method(object sender, RoutedEventArgs e)
     {
+        OKCancel_Pressed = true;
         IsEnabled = true;
+        SubWindow.Close();
         //Do nothing, user cancelled prompt
     }
 
     public void DummyWindow_Closed(object sender, EventArgs e)
     {
-        IsEnabled = true;
+        if (!OKCancel_Pressed)
+        {
+            IsEnabled = true;
+        }
+
         //User closed window forcefully.
     }
-
+    
     public void Add_Method(object sender, RoutedEventArgs e)
     {
+        OKCancel_Pressed = false;
         //This entire method is dedicated to the "Add" button.
         IsEnabled = false;
 
         //Create new window and add a grid
-        DummyWindow addWindow = new()
+        SubWindow = new()
         {
-            ShowActivated = true, Title = Table.Name + " Editor", Owner = GetWindow(this),
+            ShowActivated = true,
+            Name = Table.Name,
+            Title = "Editor",
+            Owner = GetWindow(this),
             WindowStartupLocation = WindowStartupLocation.CenterOwner
         };
-        addWindow.Show();
-
-        addWindow.Closed += DummyWindow_Closed!;
-
-        var newGrid = new Grid
+        
+        SubWindow.Closed += DummyWindow_Closed!;
+        
+        Grid newGrid = new Grid
             { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
 
         var textBlockColumnDefinition = new ColumnDefinition();
@@ -148,32 +182,52 @@ public partial class MainWindow
             //Grid will contains text blocks and textboxes so the user can insert new data rows in the data table, afterwards
             //the SQL table will be updated with this new data table.
             var tb = new TextBlock();
+            ComboBox comboTextBox = new ComboBox();
             TextBox inputTextBox = new();
+            
             var columnName = col.Name.Replace("_Header", "");
 
             if (columnName != "" && columnName != "ID")
             {
                 var contentRowDefinition = new RowDefinition { Height = new GridLength(30) };
                 newGrid.RowDefinitions.Add(contentRowDefinition);
+                
+                    tb.Text = col.Name.Replace("_Header", "").Replace("_", " ") + "  :  ";
+                    tb.FontFamily = new FontFamily("Century Gothic");
+                    //tb.Width = 200;
+                    tb.FontSize = 14;
+                    tb.Height = 23;
+                    tb.HorizontalAlignment = HorizontalAlignment.Right;
+                    tb.VerticalAlignment = VerticalAlignment.Center;
+                    Grid.SetColumn(tb, 0);
+                    
+                    newGrid.Children.Add(tb);
 
-                tb.Text = col.Name.Replace("_Header", "").Replace("_", " ") + "  :  ";
-                tb.FontFamily = new FontFamily("Century Gothic");
-                tb.FontSize = 14;
-                tb.Height = 23;
-                tb.HorizontalAlignment = HorizontalAlignment.Right;
-                Grid.SetColumn(tb, 0);
-
-
-                inputTextBox.Width = 200;
-                inputTextBox.Height = 23;
-                inputTextBox.FontSize = 14;
-                inputTextBox.FontFamily = new FontFamily("Century Gothic");
-                inputTextBox.HorizontalAlignment = HorizontalAlignment.Center;
-                Grid.SetColumn(inputTextBox, 1);
-
-                newGrid.Children.Add(tb);
-                newGrid.Children.Add(inputTextBox);
-
+                if (!columnName.Contains("Type"))
+                {
+                    inputTextBox.Width = 200;
+                    inputTextBox.Height = 23;
+                    inputTextBox.FontSize = 14;
+                    inputTextBox.FontFamily = new FontFamily("Century Gothic");
+                    inputTextBox.HorizontalAlignment = HorizontalAlignment.Center;
+                    newGrid.Children.Add(inputTextBox);
+                    Grid.SetRow(inputTextBox, newGrid.RowDefinitions.IndexOf(contentRowDefinition));
+                    Grid.SetColumn(inputTextBox, 1);
+                }
+                else
+                {
+                    comboTextBox.Width = 200;
+                    comboTextBox.Height = 23;
+                    comboTextBox.FontSize = 14;
+                    comboTextBox.FontFamily = new FontFamily("Century Gothic");
+                    comboTextBox.HorizontalAlignment = HorizontalAlignment.Center;
+                    comboTextBox.IsEditable = false;
+                    newGrid.Children.Add(comboTextBox);
+                    Grid.SetRow(comboTextBox, newGrid.RowDefinitions.IndexOf(contentRowDefinition));
+                    Grid.SetColumn(comboTextBox, 1);
+                }
+              
+                
                 //Several keywords are taken in consideration to avoid certain column values to be edited
                 //as they are not meant to be edited
                 if (columnName.Contains("Date"))
@@ -188,7 +242,7 @@ public partial class MainWindow
                 }
 
                 Grid.SetRow(tb, newGrid.RowDefinitions.IndexOf(contentRowDefinition));
-                Grid.SetRow(inputTextBox, newGrid.RowDefinitions.IndexOf(contentRowDefinition));
+                
             }
         }
 
@@ -202,18 +256,28 @@ public partial class MainWindow
         foreach (var subMenuControl in SubMenuButtonsList)
             if (subMenuControl.Name.Contains("Ok") || subMenuControl.Name.Contains("Cancel"))
             {
+                try
+                {
+                    Grid ParentGrid = (Grid)subMenuControl.Parent;
+                    ParentGrid.Children.Clear();
+                }
+                catch (Exception exception)
+                {
+
+                }
                 newGrid.Children.Add(subMenuControl);
                 Grid.SetRow(subMenuControl, newGrid.RowDefinitions.IndexOf(confirmationsRowDefinition));
                 Grid.SetColumn(subMenuControl, colIndex);
                 colIndex += 1;
             }
 
-        addWindow.DummyWindow_MainGrid.Children.Add(newGrid);
-        addWindow.SizeToContent = SizeToContent.Width;
-        addWindow.SizeToContent = SizeToContent.Height;
+        SubWindow.DummyWindow_MainGrid.Children.Add(newGrid);
+        SubWindow.Width = 400;
+        SubWindow.SizeToContent = SizeToContent.Height;
         //addWindow.Width += 30;
         //addWindow.Height += 30;
-        addWindow.ResizeMode = ResizeMode.NoResize;
+        SubWindow.ResizeMode = ResizeMode.NoResize;
+        SubWindow.Show();
     }
 
     private StackPanel CreateMainMenu(List<string> nameList)
@@ -280,7 +344,7 @@ public partial class MainWindow
         SubMenuStackPanel.Children.Clear();
         SubMenuStackPanel = new StackPanel { Orientation = Orientation.Horizontal };
         var subMenuItems =
-            SQL_Load_SubMenuItems("Server=localhost;User ID=root;Database=straussdatabase", senderName);
+            SQL_Load_SpecificColumn("Server=localhost;User ID=root;Database=straussdatabase", senderName, "category_submenu");
 
         MainGrid.Children.Remove(SubMenuStackPanel);
 
@@ -432,13 +496,13 @@ public partial class MainWindow
         return table;
     }
 
-    public static DataTable SQL_Load_SubMenuItems(string sqlConnectionString, string columnName)
+    public static DataTable SQL_Load_SpecificColumn(string sqlConnectionString, string columnName, string tableName)
     {
         //This function is used to load settings for the MainMenu -> SubMenu items.
         var table = new DataTable();
         using (var connection = new MySqlConnection(sqlConnectionString))
         {
-            using (var command = new MySqlCommand("SELECT " + columnName + " FROM category_submenu", connection))
+            using (var command = new MySqlCommand("SELECT " + columnName + " FROM " + tableName, connection))
             {
                 connection.Open();
                 table.Load(command.ExecuteReader());
